@@ -11,6 +11,14 @@
 Input: dimensions, board, dictionary of valid words
 Output: all words found from board in dictionary */
 
+/* Beware of some inefficiencies here:
+   Passing around/appending vectors is most definitely not efficient
+   I don't ignore duplicate words until the end. Instead, I cut them out by appending the vectors to a set.
+   Instead of making std::strings for the words, we could use char *, less overhead I believe.
+   I'm not a fan
+*/
+
+
 // Coordinate on boogle board
 struct Index
 {
@@ -165,7 +173,7 @@ void WordInsertPrefixTree(DictionaryNode * node, std::string const & word)
 }
 
 // Returns words found on a flat 2D boggle board array from a dictionary of valid words
-// Note: Directions did not say to disregard words less than 3 characters so I left it out. I believe that is a Boggle rule though.
+// Note: Boggle does not allow for characters less than 3, but I let them be done here anyway. Feel free to check size in the search to elimate them.
 std::set<std::string> const FindBoggleWords(int dimensions, char const * const board, DictionaryNode const * const dictionary)
 {
 	std::set<std::string> foundUniqueWords;
@@ -173,7 +181,7 @@ std::set<std::string> const FindBoggleWords(int dimensions, char const * const b
 	{
 		for (int y = 0; y < dimensions; ++y)
 		{
-			// We don't want duplicate words
+			// We don't want duplicate words.
 			AppendVectorToSet(foundUniqueWords, FindWordsAtIndex(Index(x, y), std::string(""), std::vector<Index>(), dimensions, board, dictionary));
 		}
 	}
@@ -183,7 +191,7 @@ std::set<std::string> const FindBoggleWords(int dimensions, char const * const b
 /* Recursively finds words using valid Boggle rules (left,right,up,down,diagonals, not reusing indexes used)
 1) Could be cleaner - dimensions, board, and dictionary would be better in a class instead of parameters.
 2) Running time is an improvement over my naive solution of regular recursive searching.
-3) Might be able to do away with vectors and go entirely with sets, but I think appending them to one set later is faster */
+3) Vectors here are innefficient. Could do away with them */
 std::vector<std::string> const FindWordsAtIndex(Index index, std::string letters, std::vector<Index> visitedLetters, int const dimensions, char const * const board,
 	DictionaryNode const * const dictionary)
 {
