@@ -15,7 +15,6 @@ Output: all words found from board in dictionary */
    Passing around/appending vectors is most definitely not efficient
    I don't ignore duplicate words until the end. Instead, I cut them out by appending the vectors to a set.
    Instead of making std::strings for the words, we could use char *, less overhead I believe.
-   I'm not a fan
 */
 
 
